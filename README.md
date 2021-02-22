@@ -1,8 +1,4 @@
 # nodejs-datatable-query
-query builder library for nodejs-mysql
-
-
-# nodejs-datatable-query
 
 Query Builder Library for nodejs-mysql
 
