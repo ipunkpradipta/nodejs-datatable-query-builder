@@ -1,0 +1,22 @@
+{
+  "name": "nodejs-datatable-query-builder",
+  "version": "1.0.0",
+  "description": "Simple query builder for datatable ajax request",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipunkpradipta/nodejs-datatable-query-builder.git"
+  },
+  "keywords": [
+    "nodejs-datatable"
+  ],
+  "author": "ipunkpradipta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ipunkpradipta/nodejs-datatable-query-builder/issues"
+  },
+  "homepage": "https://github.com/ipunkpradipta/nodejs-datatable-query-builder#readme"
+}
