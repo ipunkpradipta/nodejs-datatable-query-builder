@@ -62,7 +62,7 @@ const requestDataExample = {
     start: 0,
     length: 10,
     search:{
-        value: 'ss',
+        value: '',
         regex: false,
     },
     table: 'm_users',
@@ -74,54 +74,54 @@ const requestDataExample = {
 }
 
 //list of Column from request
-let aColumns = [];
+let listColumn = [];
 requestDataExample.columns.map((value) => {
-    if(value.name !== exceptionColumn) aColumns.push(value.name);
+    if(value.name !== exceptionColumn) listColumn.push(value.name);
 });
 
 const buildPagination = (requestDataExample) => {
-    let sLimit = ''
+    let limit = ''
     if(requestDataExample.start !== null && requestDataExample.length !== -1){
-        sLimit += `LIMIT ${requestDataExample.start}, ${requestDataExample.length}`
+        limit += `LIMIT ${requestDataExample.start}, ${requestDataExample.length}`
     }
-    return sLimit;
+    return limit;
 }
 
 const buildSearchFiltering = (requestDataExample) => {
-    let sWhere = '';
+    let filter = '';
     if(typeof requestDataExample.search !== 'undefined' && requestDataExample.search.value != "")
     {
-        sWhere = "WHERE (";
-        aColumns.map((value) => sWhere += `${value} LIKE '%${requestDataExample.search.value}%' OR `);
-        sWhere = sWhere.substring(0, sWhere.length -4);
-        sWhere += ')';
+        filter = "WHERE (";
+        listColumn.map((value) => filter += `${value} LIKE '%${requestDataExample.search.value}%' OR `);
+        filter = filter.substring(0, filter.length -4);
+        filter += ')';
     }
-    return sWhere;
+    return filter;
 }
 
 // extra Filtering with "parameter" params
 const buildFiltering = (requestDataExample) => {
-    let sWhere = buildSearchFiltering(requestDataExample);
+    let filter = buildSearchFiltering(requestDataExample);
     const parameters = requestDataExample.params; 
     if(typeof parameters !== 'undefined'){
         if(Array.isArray(parameters)){
-            let wString='';
+            let whereParameter='';
             parameters.map((param,index) => {
-                (param.value.toLowerCase() === 'null') ? wString += `${param.key} IS NULL AND ` : wString += `${param.key} ${param.operator} '${param.value}' AND `
-                if(index + 1 == parameters.length) wString = wString.substring(0,wString.length -5);
+                (param.value.toLowerCase() === 'null') ? whereParameter += `${param.key} IS NULL AND ` : whereParameter += `${param.key} ${param.operator} '${param.value}' AND `
+                if(index + 1 == parameters.length) whereParameter = whereParameter.substring(0,whereParameter.length -5);
             })
-            sWhere == '' ? sWhere = `WHERE ${wString}` : sWhere += ` AND ${wString}`  
+            filter == '' ? filter = `WHERE ${whereParameter}` : filter += ` AND ${whereParameter}`  
         }
-        return sWhere
+        return filter
     }
-    return sWhere
+    return filter
 }
 
-const query = (requestDataExample) => {
+const buildQuery = (requestDataExample) => {
     const pagination = buildPagination(requestDataExample); 
     const filtering = buildFiltering(requestDataExample);
-    return `${filtering} ${pagination}` 
+    return `SELECT SQL_CALC_FOUND_ROWS ${listColumn.join(',')} FROM ${requestDataExample.table} ${filtering} ${pagination}`
 }
 
-console.log(query(requestDataExample))
+console.log(buildQuery(requestDataExample))
 
